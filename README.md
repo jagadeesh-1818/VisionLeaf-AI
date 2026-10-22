@@ -89,6 +89,10 @@ The application loads the saved checkpoint to make predictions; retraining is no
 
 Training and evaluation visualizations are included in the repository. Refer to `accuracy_plot.png`, `loss_plot.png`, and `history.json` for the available recorded results.
 
+## 🖥️ Demo
+
+![VisionLeaf AI prediction demo](screenshots/Demo1.png)
+
 ## ⚠️ Disclaimer
 
 Predictions and treatment suggestions are informational and should be verified before applying treatments to real plants.
