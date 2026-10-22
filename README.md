@@ -91,9 +91,9 @@ Training and evaluation visualizations are included in the repository. Refer to 
 
 ## 🖥️ Demo
 
-![VisionLeaf AI prediction demo 1](screenshots/Demo1.png)
+![VisionLeaf AI prediction demo 1](Screenshot/Demo1.png)
 
-![VisionLeaf AI prediction demo 2](screenshots/Demo2.png)
+![VisionLeaf AI prediction demo 2](Screenshot/Demo2.png)
 
 ## ⚠️ Disclaimer
 
