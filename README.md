@@ -1,47 +1,71 @@
-# 🌿 VisionLeaf AI — Medicinal Plant Disease Detection
+# VisionLeaf AI 🌿
+### Medicinal Plant Disease Detection using Deep Learning
 
-VisionLeaf AI is a computer vision project designed to identify medicinal plant diseases from leaf images and provide suggested treatment information.
+VisionLeaf AI is a computer-vision application that classifies medicinal plant leaf images into healthy or disease categories. It uses a fine-tuned **MobileNetV2** model and provides a treatment-information lookup for the predicted disease class.
 
-## ✨ Features
+The project covers **25 classes across 7 medicinal plants**: Aloe, Chrysanthemum, Hibiscus, Mint, Neem, Tulasi, and Turmeric.
 
-- 📷 Upload a leaf image for analysis
-- 🧠 Deep learning-based image classification using MobileNetV2
-- 🌱 Display a predicted plant disease class
-- 💡 Provide treatment suggestions using a CSV-based lookup
-- 📊 Include model evaluation and training visualizations
+## Highlights
 
-## 🛠️ Tech Stack
+- Upload a leaf image through a Gradio web interface.
+- Classify the image using a trained MobileNetV2 model.
+- Display the predicted class and model confidence.
+- Show a corresponding information entry from `solutions.csv` for supported disease classes.
+- Keep training history, loss curves, and validation-accuracy plots for model review.
+
+## Model and reported result
+
+| Item | Details |
+|---|---|
+| Architecture | MobileNetV2 (transfer learning / fine-tuning) |
+| Number of classes | 25 |
+| Plant categories | 7 |
+| Input resolution | 224 × 224 |
+| Reported test accuracy | **94.87%** |
+| Inference framework | PyTorch / Torchvision |
+
+The training script starts from ImageNet-pretrained MobileNetV2 weights, freezes the feature extractor initially, fine-tunes the final feature blocks, and replaces the classifier for the project's classes. The best validation checkpoint is saved as `best_plant_disease_model.pth`.
+
+> **Evaluation note:** The 94.87% figure is the reported test-set accuracy for this project. Performance can vary with image quality, lighting, backgrounds, and samples that differ from the training data.
+
+## Tech stack
 
 - **Python**
-- **PyTorch** — deep learning and model inference
-- **Torchvision** — image model architecture and transformations
-- **Gradio** — interactive user interface
-- **Pandas** — treatment information and CSV handling
-- **Pillow** — image processing
+- **PyTorch** and **Torchvision** — model training and inference
+- **MobileNetV2** — image classification backbone
+- **Gradio** — interactive web interface
+- **Pandas** — treatment-information lookup
+- **Pillow** — image handling
+- **scikit-learn**, **Matplotlib**, and **tqdm** — evaluation, plots, and training utilities
 
-## 📁 Project Structure
+## Repository structure
 
 ```text
 VisionLeaf-AI/
-├── Web.py
-├── best_plant_disease_model.pth
-├── class_names.json
-├── solutions.csv
-├── train.py
-├── evaluation.py
-├── plots.py
-├── prepare_data.py
-├── split_data.py
-├── verify_images.py
-├── create_class_json.py
-├── accuracy_plot.png
-├── loss_plot.png
-├── history.json
+├── Screenshot/
+│   ├── Demo1.png
+│   └── Demo2.png
+├── Web.py                         # Gradio inference application
+├── app.py                          # Earlier application version
+├── train.py                        # Model training and fine-tuning
+├── evaluation.py                   # Test-set evaluation
+├── prepare_data.py                 # Dataset loading and transforms
+├── split_data.py                   # Dataset splitting utility
+├── verify_images.py                # Dataset image checks
+├── create_class_json.py            # Class-label file utility
+├── best_plant_disease_model.pth    # Trained model checkpoint
+├── class_names.json                # Model output labels
+├── solutions.csv                   # Disease-to-information lookup
+├── history.json                    # Recorded training history
+├── accuracy_plot.png               # Validation accuracy curve
+├── loss_plot.png                   # Training/validation loss curves
 ├── requirements.txt
 └── README.md
 ```
 
-## 🚀 Getting Started
+The training dataset is not included in this repository. The trained checkpoint and class-label file are included for inference.
+
+## Getting started
 
 ### 1. Clone the repository
 
@@ -50,59 +74,77 @@ git clone https://github.com/jagadeesh-1818/VisionLeaf-AI.git
 cd VisionLeaf-AI
 ```
 
-### 2. Create a virtual environment
+### 2. Create and activate a virtual environment
 
-```bash
+**Windows PowerShell**
+```powershell
 python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 ```
 
-Activate it on Windows:
-
-```powershell
-.\.venv\Scripts\Activate.ps1
+**macOS / Linux**
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
 ### 3. Install dependencies
 
 ```bash
 python -m pip install --upgrade pip
-python -m pip install gradio torch torchvision pandas pillow
+python -m pip install -r requirements.txt
 ```
 
-Install any additional dependencies required by the project.
+For GPU-enabled training, install the PyTorch and Torchvision builds that match your CUDA environment using the official [PyTorch installation selector](https://pytorch.org/get-started/locally/). CPU inference is supported by the application.
 
 ### 4. Run the application
+
+Run the Gradio app from the repository root:
 
 ```bash
 python Web.py
 ```
 
-Open the local URL displayed in the terminal, usually `http://127.0.0.1:7860`.
+Open the local URL printed in the terminal (typically `http://127.0.0.1:7860`).
 
-## 🧠 Model
+## Screenshots
 
-The project uses a trained MobileNetV2 image-classification model saved as `best_plant_disease_model.pth`.
+### Application interface and prediction
+![VisionLeaf AI demo 1](Screenshot/Demo1.png)
 
-The application loads the saved checkpoint to make predictions; retraining is not required to run inference when the necessary model and class-label files are available.
+### Prediction and treatment information
+![VisionLeaf AI demo 2](Screenshot/Demo2.png)
 
-## 📊 Evaluation
+## Training and evaluation
 
-Training and evaluation visualizations are included in the repository. Refer to `accuracy_plot.png`, `loss_plot.png`, and `history.json` for the available recorded results.
+The training pipeline expects the dataset to be arranged in the directory structure used by `prepare_data.py`. The dataset itself is not tracked in this repository.
 
-## 🖥️ Demo
+To train the model:
 
-![VisionLeaf AI prediction demo 1](Screenshot/Demo1.png)
+```bash
+python train.py
+```
 
-![VisionLeaf AI prediction demo 2](Screenshot/Demo2.png)
+To evaluate the saved checkpoint against the test split:
 
-## ⚠️ Disclaimer
+```bash
+python evaluation.py
+```
 
-Predictions and treatment suggestions are informational and should be verified before applying treatments to real plants.
+The evaluation script prints a classification report, confusion matrix, and overall test accuracy. Training history and plots are saved as `history.json`, `accuracy_plot.png`, and `loss_plot.png`.
 
-## 👨‍💻 Author
+## Important limitations
 
-Developed as an AI/ML project exploring deep learning and medicinal plant disease detection.
+- Predictions are model estimates, not guaranteed diagnoses.
+- Confidence is the model's softmax score and should not be interpreted as a calibrated probability.
+- Treatment text is retrieved from a static CSV lookup; it is not generated or independently verified by the model.
+- Verify plant disease identification and any treatment decision with a qualified agricultural or plant-health expert before acting.
+
+## Author
+
+**Jagadeesh B R**  
+[GitHub profile](https://github.com/jagadeesh-1818)
 
 ---
 
-If you find this project useful, consider giving the repository a ⭐.
+If you find this project useful, feel free to star the repository.
